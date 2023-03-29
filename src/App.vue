@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import Table from "@/components/table/index.vue";
+import Output from "@comp/output/index.vue";
+import Table from "@comp/table/index.vue";
 const tableData = ref([
 	{
 		date: "2016-05-03",
@@ -26,26 +27,10 @@ const tableData = ref([
 </script>
 
 <template>
-	<div class="tac mt10">
-		<a class="btn">导出</a>
-	</div>
+	<Output :data="tableData" />
 	<div class="w90per mauto">
 		<Table :data="tableData" />
 	</div>
 </template>
 
-<style lang="less" scoped>
-.btn {
-	display: inline-block;
-	padding: 6px 20px;
-	color: #fff;
-	background: #2065fc;
-	border-radius: 4px;
-	margin-bottom: 10px;
-	font-size: 14px;
-	cursor: pointer;
-	&:hover {
-		opacity: 0.8;
-	}
-}
-</style>
+<style lang="less" scoped></style>
