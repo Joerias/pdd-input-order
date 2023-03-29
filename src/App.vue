@@ -2,6 +2,13 @@
 import { ref } from "vue";
 import Output from "@comp/output/index.vue";
 import Table from "@comp/table/index.vue";
+
+type x = {
+	a: number;
+	b: string;
+};
+const v = <x>{};
+console.log(v.a ?? "yes");
 const tableData = ref([
 	{
 		date: "2016-05-03",
