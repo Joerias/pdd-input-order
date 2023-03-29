@@ -1,23 +1,21 @@
 <script setup lang="ts">
 import { writeFile } from "fs";
-import { exportExcel } from "@utils/xlsx";
-import Date from "@utils/date";
+import Excel from "@utils/xlsx";
 type Props = {
 	data?: any;
 };
 const props = withDefaults(defineProps<Props>(), {
 	data: () => [],
 });
-console.log(new Date("kk", 100).output(1));
 
-const handleOutput = () => {
-	exportExcel(props.data, "统计.xlsx");
+const handleDayOutput = () => {
+	new Excel(props.data).export("统计");
 };
 </script>
 
 <template>
 	<div class="tac mt10">
-		<a class="btn" @click="handleOutput">导出</a>
+		<a class="btn" @click="handleDayOutput">导出当天</a>
 	</div>
 </template>
 
