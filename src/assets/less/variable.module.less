@@ -1,0 +1,68 @@
+// 功能
+@col-text: #303133;
+@col-bg: #2065fc;
+@col-link: #0477f3;
+@col-disabled: #c0c4cc;
+
+// 标准颜色
+@col-blue: #0477f3;
+@col-green: #42a100;
+@col-red: #f56c6c;
+@col-yellow: #e6a23c;
+@col-orange: #ee7354;
+@col-gray: #909399;
+@col-white: #fff;
+
+// 标准颜色对标的浅色
+@col-blue-thin: #4593e7;
+@col-green-thin: #67c23a;
+@col-red-thin: #f56c6c;
+@col-yellow-thin: #eebe77;
+@col-red-gray: #828c9c;
+
+// 标准颜色对标的深色
+@col-blue-deep: #14569c;
+
+// 分割线颜色
+@col-line: #eee;
+
+// 圆角值
+@radius: 8px;
+
+@primary-border-color: #e4e7ed;
+
+// 书记员、原告 对应颜色
+@pri-title-color: #2065fc;
+@pri-color: #409eff;
+@pri-bg-color: #ecf5ff;
+@pri-border-color: #dde7ff;
+
+// 审判长 对应颜色
+@war-title-color: #f6ab3d;
+@war-color: #e6a23c;
+@war-bg-color: #fcf6ec;
+@war-border-color: #faecd8;
+
+// 被告 对应颜色
+@suc-color: #67c23a;
+@suc-bg-color: #f0f9eb;
+@suc-border-color: #d1edc4;
+
+// 第三人 对应颜色
+@err-color: #f56c6c;
+@err-bg-color: #fef0f0;
+@err-border-color: #fcd3d3;
+
+:export {
+	priTitleColor: @pri-title-color;
+	warTitleColor: @war-title-color;
+	sucColor: @suc-color;
+}
+
+.disFlex(@display: flex, @direction: row, @alItems: center, @juContent: space-between, @wrap: nowrap) {
+	display: @display;
+	flex-direction: @direction;
+	align-items: @alItems;
+	justify-content: @juContent;
+	flex-wrap: @wrap;
+}

@@ -1,0 +1,196 @@
+body {
+	margin: 0 !important;
+	padding: 0;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-font-smoothing: antialiased;
+	font-family: "Microsoft Yahei" !important;
+	font-size: 12px;
+	color: @col-text;
+	line-height: 1.5 !important;
+}
+
+ul,
+li,
+p {
+	margin: 0;
+	padding: 0;
+}
+
+li {
+	list-style-type: none;
+}
+
+b,
+strong {
+	font-weight: 400;
+}
+
+i,
+em {
+	font-style: normal;
+}
+
+.bold {
+	font-weight: 700 !important;
+}
+
+/*滚动条整体样式*/
+::-webkit-scrollbar {
+	width: 6px;
+	height: 8px;
+}
+
+/*滚动条里面轨道*/
+::-webkit-scrollbar-track {
+	box-shadow: inset 0 0 5px rgb(255, 255, 255);
+	border-radius: 10px;
+	background: #ededed;
+}
+
+/*滚动条里面小方块*/
+::-webkit-scrollbar-thumb {
+	background: #c8c9cc;
+	border-radius: 20px;
+}
+
+// firefox hack
+* {
+	scrollbar-color: #999 #ededed;
+	/* 滑块颜色  滚动条背景颜色 未生效 */
+	scrollbar-width: thin;
+	/* 滚动条宽度有三种：thin、auto、none */
+}
+
+.df {
+	display: flex;
+}
+
+.dn {
+	display: none;
+}
+
+.tal {
+	text-align: left;
+}
+
+.tac {
+	text-align: center;
+}
+
+.tar {
+	text-align: right;
+}
+
+.link {
+	color: @col-link;
+
+	&:hover {
+		opacity: 0.7;
+	}
+}
+
+.f12 {
+	font-size: 12px !important;
+}
+
+.w100 {
+	width: 100px !important;
+}
+
+.w120 {
+	width: 120px !important;
+}
+
+.w150 {
+	width: 150px !important;
+}
+
+.w200 {
+	width: 200px !important;
+}
+
+.w300 {
+	width: 300px !important;
+}
+
+.w90per {
+	width: 90% !important;
+	overflow: auto;
+}
+
+.w100per {
+	width: 100% !important;
+	overflow: auto;
+}
+
+.mauto {
+	margin: 0 auto;
+}
+
+.mt10 {
+	margin-top: 10px !important;
+}
+
+.mt12 {
+	margin-top: 12px !important;
+}
+
+.mt15 {
+	margin-top: 15px !important;
+}
+
+.mt16 {
+	margin-top: 16px !important;
+}
+
+.mt20 {
+	margin-top: 20px !important;
+}
+
+.mt24 {
+	margin-top: 24px !important;
+}
+
+.mb0 {
+	margin-bottom: 0 !important;
+}
+
+.mb10 {
+	margin-bottom: 10px !important;
+}
+
+.mb16 {
+	margin-bottom: 16px !important;
+}
+
+.ml10 {
+	margin-left: 10px !important;
+}
+
+.ml12 {
+	margin-left: 12px !important;
+}
+
+.ml20 {
+	margin-left: 20px !important;
+}
+
+.mr5 {
+	margin-right: 5px !important;
+}
+
+.mr10 {
+	margin-right: 10px !important;
+}
+
+.mr20 {
+	margin-right: 20px !important;
+}
+
+.p10 {
+	padding: 10px !important;
+}
+
+.p20 {
+	padding: 20px !important;
+}
