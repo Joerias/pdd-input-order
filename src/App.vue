@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import Output from "@comp/output/index.vue";
 import Table from "@comp/table/index.vue";
+import { ITableItem } from "@type/index";
 
 type x = {
 	a: number;
@@ -9,7 +10,7 @@ type x = {
 };
 const v = <x>{};
 console.log(v.a ?? "yes");
-const tableData = ref([
+const tableData = ref<ITableItem[]>([
 	{
 		date: "2016-05-03",
 		name: "Tom",

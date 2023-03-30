@@ -1,12 +1,14 @@
 import * as xlsx from "xlsx";
-import TransitionDate from "@utils/transitionDate";
+// import * as xlsx from "xlsx-style";
+import FormatDate from "@util/formatDate";
+import { ITableItem } from "@type/index";
 
-const today = new TransitionDate(new Date());
+const today = new FormatDate(new Date());
 
 export default class Excel {
-	array: any[];
+	array: ITableItem[];
 	sheetName: string;
-	constructor(array: any[], sheetName = "Sheet1") {
+	constructor(array: ITableItem[], sheetName = "Sheet1") {
 		this.array = array;
 		this.sheetName = sheetName;
 	}

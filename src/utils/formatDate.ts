@@ -1,4 +1,4 @@
-export default class TransitionDate {
+export default class FormatDate {
 	value: Date;
 	constructor(value: Date) {
 		this.value = value;

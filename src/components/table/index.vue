@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { ITableItem } from "@type/index";
+
 type Props = {
-	data?: any;
+	data?: ITableItem[];
 };
 
 const props = withDefaults(defineProps<Props>(), {
