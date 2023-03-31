@@ -12,7 +12,7 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-	<el-table class="mt10" :data="props.data" border stripe>
+	<el-table class="mt10" v-if="props.data.length !== 0" :data="props.data" border stripe>
 		<template v-if="props.label">
 			<el-table-column align="center" :label="props.label">
 				<el-table-column prop="order_sn" label="order" width="180" />

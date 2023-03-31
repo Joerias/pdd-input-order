@@ -6,20 +6,26 @@ import { IImportTableItem } from "@type/index";
 const today = new FormatDate(new Date());
 
 export default class Excel {
-	array: IImportTableItem[];
-	sheetName: string;
-	constructor(array: IImportTableItem[], sheetName = "Sheet1") {
-		this.array = array;
-		this.sheetName = sheetName;
+	constructor() {}
+
+	import(excelRcFileBuffer: ArrayBuffer) {
+		// 读取表格对象
+		const workbook = xlsx.read(excelRcFileBuffer, { type: "buffer" });
+		// 找到第一张表
+		const sheetNames = workbook.SheetNames;
+		const sheet1 = workbook.Sheets[sheetNames[0]];
+		// 读取内容
+		return xlsx.utils.sheet_to_json(sheet1);
 	}
-	export(name: string) {
+
+	export(array: IImportTableItem[], fileName: string, sheetName = "Sheet1") {
 		const workBook = {
-			SheetNames: [this.sheetName],
+			SheetNames: [sheetName],
 			Sheets: {
-				[this.sheetName]: xlsx.utils.json_to_sheet(this.array),
+				[sheetName]: xlsx.utils.json_to_sheet(array),
 			},
 		};
-		const fileName = `${today.output()}${name}.xlsx`;
-		return xlsx.writeFile(workBook, fileName);
+		const fileNames = `${today.output()}${fileName}.xlsx`;
+		return xlsx.writeFile(workBook, fileNames);
 	}
 }

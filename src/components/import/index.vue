@@ -1,23 +1,22 @@
-<script setup lang="ts">
+<script setup lang="ts" name="import">
 import { writeFile } from "fs";
 import Excel from "@util/xlsx";
-import { ITableItem } from "@type/index";
+import { IImportTableItem } from "@type/index";
+import config from "@/config";
 
 type Props = {
-	data?: ITableItem[];
+	data?: IImportTableItem[];
 };
 const props = withDefaults(defineProps<Props>(), {
 	data: () => [],
 });
 const excel = new Excel(props.data);
 
-const handleDayOutput = () => {
-	excel.export("上传");
-};
+const handleDayOutput = () => {};
 </script>
 
 <template>
-	<el-button size="large" plain @click="handleDayOutput"> 导入 </el-button>
+	<el-button size="large" plain @click="handleDayOutput"> {{ config.导入 }} </el-button>
 </template>
 
 <style lang="less" scoped>

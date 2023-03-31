@@ -6,26 +6,26 @@ import { IImportTableItem } from "@type/index";
 import config from "@/config";
 
 type Props = {
-	data?: IImportTableItem[];
+	data: IImportTableItem[];
 };
-const props = withDefaults(defineProps<Props>(), {
-	data: () => [],
-});
+const props = withDefaults(defineProps<Props>(), {});
 const emit = defineEmits(["showOutputData"]);
 
-const outputData = ref<IImportTableItem[]>(new OutputStandard(props.data).processing());
-const excel = new Excel(outputData.value);
+const outputData = ref<IImportTableItem[]>();
+const excel = new Excel();
 
 watch(
-	outputData,
+	props.data,
 	(val) => {
-		emit("showOutputData", val);
+		if (val.length === 0) return;
+		outputData.value = new OutputStandard(props.data).processing();
+		emit("showOutputData", outputData.value);
 	},
-	{ deep: true, immediate: true }
+	{ deep: true }
 );
 
 const handleDayOutput = () => {
-	excel.export(config.导出发单);
+	excel.export(outputData.value, config.导出发单);
 };
 </script>
 
