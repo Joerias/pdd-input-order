@@ -29,40 +29,13 @@
 // 圆角值
 @radius: 8px;
 
-@primary-border-color: #e4e7ed;
-
-// 书记员、原告 对应颜色
-@pri-title-color: #2065fc;
-@pri-color: #409eff;
-@pri-bg-color: #ecf5ff;
-@pri-border-color: #dde7ff;
-
-// 审判长 对应颜色
-@war-title-color: #f6ab3d;
-@war-color: #e6a23c;
-@war-bg-color: #fcf6ec;
-@war-border-color: #faecd8;
-
-// 被告 对应颜色
-@suc-color: #67c23a;
-@suc-bg-color: #f0f9eb;
-@suc-border-color: #d1edc4;
-
-// 第三人 对应颜色
-@err-color: #f56c6c;
-@err-bg-color: #fef0f0;
-@err-border-color: #fcd3d3;
-
-:export {
-	priTitleColor: @pri-title-color;
-	warTitleColor: @war-title-color;
-	sucColor: @suc-color;
+.percentsWidth(@width) {
+	width: @width !important;
+	overflow: auto;
 }
 
-.disFlex(@display: flex, @direction: row, @alItems: center, @juContent: space-between, @wrap: nowrap) {
-	display: @display;
-	flex-direction: @direction;
-	align-items: @alItems;
-	justify-content: @juContent;
-	flex-wrap: @wrap;
-}
+// .margin(@position,@width) {
+// 	if(@position = 'top') {
+// 		margin-top: @width !important;
+// 	}
+// }

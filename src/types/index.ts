@@ -1,5 +1,5 @@
-export interface ITableItem {
-	date: string;
-	name: string;
-	address: string;
+export interface IImportTableItem {
+	order_sn: string;
+	nashipping_name?: string;
+	shipping_sn: string;
 }

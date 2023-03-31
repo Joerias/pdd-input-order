@@ -1,42 +1,36 @@
-<script setup lang="ts">
-import { writeFile } from "fs";
+<script setup lang="ts" name="output">
+import { ref, watch } from "vue";
 import Excel from "@util/xlsx";
-import { ITableItem } from "@type/index";
+import { OutputStandard } from "@util/common";
+import { IImportTableItem } from "@type/index";
+import config from "@/config";
 
 type Props = {
-	data?: ITableItem[];
+	data?: IImportTableItem[];
 };
 const props = withDefaults(defineProps<Props>(), {
 	data: () => [],
 });
-const excel = new Excel(props.data);
+const emit = defineEmits(["showOutputData"]);
+
+const outputData = ref<IImportTableItem[]>(new OutputStandard(props.data).processing());
+const excel = new Excel(outputData.value);
+
+watch(
+	outputData,
+	(val) => {
+		emit("showOutputData", val);
+	},
+	{ deep: true, immediate: true }
+);
 
 const handleDayOutput = () => {
-	excel.export("统计");
+	excel.export(config.导出发单);
 };
 </script>
 
 <template>
-	<div class="tac mt10">
-		<el-button type="primary" plain @click="handleDayOutput">导出当天</el-button>
-		<!-- <a class="btn" @click="handleDayOutput">导出当天</a> -->
-	</div>
+	<el-button type="primary" size="large" plain @click="handleDayOutput"> {{ config.导出发单 }} </el-button>
 </template>
 
-<style lang="less" scoped>
-.btn {
-	display: inline-block;
-	padding: 6px 20px;
-	color: #409eff;
-	background: #ecf5ff;
-	border: 1px solid #a0cfff;
-	border-radius: 4px;
-	margin-bottom: 10px;
-	font-size: 14px;
-	cursor: pointer;
-	transition: 0.2s ease-in-out;
-	&:hover {
-		opacity: 0.8;
-	}
-}
-</style>
+<style lang="less" scoped></style>

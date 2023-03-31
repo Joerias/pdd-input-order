@@ -1,8 +1,9 @@
-<script setup lang="ts">
-import { ITableItem } from "@type/index";
+<script setup lang="ts" name="table">
+import { IImportTableItem } from "@type/index";
 
 type Props = {
-	data?: ITableItem[];
+	data?: IImportTableItem[];
+	label?: string;
 };
 
 const props = withDefaults(defineProps<Props>(), {
@@ -11,10 +12,19 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-	<el-table :data="props.data" border stripe>
-		<el-table-column prop="date" label="Date" width="180" />
-		<el-table-column prop="name" label="Name" width="180" />
-		<el-table-column prop="address" label="Address" />
+	<el-table class="mt10" :data="props.data" border stripe>
+		<template v-if="props.label">
+			<el-table-column align="center" :label="props.label">
+				<el-table-column prop="order_sn" label="order" width="180" />
+				<el-table-column prop="nashipping_name" label="nashipping" width="180" />
+				<el-table-column prop="shipping_sn" label="shipping" />
+			</el-table-column>
+		</template>
+		<template v-else>
+			<el-table-column prop="order_sn" label="order" width="180" />
+			<el-table-column prop="nashipping_name" label="nashipping" width="180" />
+			<el-table-column prop="shipping_sn" label="shipping" />
+		</template>
 	</el-table>
 </template>
 
