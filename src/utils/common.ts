@@ -58,7 +58,7 @@ export class ParseDocument {
 		[this.#fileHandle] = await window.showOpenFilePicker();
 		const file = await this.#fileHandle.getFile();
 		const res = await file.text();
-		return res.split("\r\n");
+		return res.split("\r\n").filter((v: string) => v);
 	}
 
 	// 分解转换成基本格式
@@ -71,6 +71,12 @@ export class ParseDocument {
 	 * 地址
 	 */
 	decompose(arr: string[]) {
+		const y = arr.find((v) => v === "=");
+		for (const i of arr) {
+			console.log();
+		}
+
+		return;
 		const twoDimensionArr = [];
 		const perimeter = Object.keys(config.分解txt表格字段).length;
 		for (let i = 0; i < arr.length; i += perimeter) {

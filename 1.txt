@@ -1,0 +1,51 @@
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>胜多负少</title>
+	</head>
+	<body>
+		<script>
+			const arr = [
+				{ num: 1, price: 10 },
+				{ num: 2, price: 2 },
+			];
+			const baseArr = ["a", "b", "=", "c", "k", "=", "=", "d"];
+			for (const i in baseArr) {
+				// console.log(i, baseArr[i]);
+			}
+			for (const i of arr) {
+				for (const j in i) {
+					// console.log(i);
+				}
+			}
+
+			const n = [];
+			baseArr.forEach((v, i) => {
+				if (v === "=") {
+					n.push(i);
+				}
+			});
+			console.log(n);
+
+			if (n.some((v, i, a) => a[i + 1] - v === 1)) console.log("error");
+
+			const final = [];
+			for (let i = 0; i <= n.length; i++) {
+				let arr = [];
+				if (i === 0) {
+					arr = baseArr.slice(0, n[i]);
+				} else if (i === n.length) {
+					arr = baseArr.slice(n[i - 1] + 1);
+				} else {
+					arr = baseArr.slice(n[i - 1] + 1, n[i]);
+				}
+				final.push(arr);
+			}
+			console.log(final);
+		</script>
+	</body>
+</html>
