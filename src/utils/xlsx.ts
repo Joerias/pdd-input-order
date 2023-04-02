@@ -1,7 +1,6 @@
 import * as xlsx from "xlsx";
 // import * as xlsx from "xlsx-style";
 import { FormatDate } from "@/utils/common";
-import { IImportTableItem } from "@type/index";
 
 const today = new FormatDate(new Date());
 
@@ -18,7 +17,7 @@ export default class Excel {
 		return xlsx.utils.sheet_to_json(sheet1);
 	}
 
-	export(array: IImportTableItem[], fileName: string, sheetName = "Sheet1") {
+	export(array: any[], fileName: string, sheetName = "Sheet1") {
 		const workBook = {
 			SheetNames: [sheetName],
 			Sheets: {

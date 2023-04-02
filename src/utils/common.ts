@@ -1,3 +1,5 @@
+import config from "@/config";
+
 export class FormatDate {
 	value: Date;
 	constructor(value: Date) {
@@ -12,24 +14,137 @@ export class FormatDate {
 	}
 }
 
-import { IImportTableItem } from "@type/index";
-export class OutputStandard {
-	#list: IImportTableItem[];
+export class Total {
+	calc(arr: any) {
+		return arr.reduce((prev: any, cur: any) => {
+			return prev + Number(cur[config.组装excel表格字段.价格]) * cur[config.组装excel表格字段.数量];
+		}, 0);
+	}
+}
 
-	constructor(list: IImportTableItem[]) {
-		this.#list = list;
+// export class OutputStandard {
+// 	#list: IImportTableItem[];
+
+// 	constructor(list: IImportTableItem[]) {
+// 		this.#list = list;
+// 	}
+
+// 	processing() {
+// 		const keyArr = Object.keys(this.#list[0]);
+// 		if (!keyArr.includes("nashipping_name")) {
+// 			const list = this.#list.map((v) => ({
+// 				order_sn: v.order_sn,
+// 				nashipping_name: v.shipping_sn.includes("YT") ? "圆通快递" : "中通快递",
+// 				shipping_sn: v.shipping_sn,
+// 			}));
+// 			this.#list = list;
+// 		}
+// 		return this.#list;
+// 	}
+// }
+
+export class ParseDocument {
+	#fileHandle: any;
+
+	// 导入.txt
+	/**
+	 * 订单号
+	 * 商品信息（分解为：版本、款式、颜色、数量、价格）
+	 * 买家姓名
+	 * 买家电话
+	 * 买家地址
+	 */
+	async import() {
+		[this.#fileHandle] = await window.showOpenFilePicker();
+		const file = await this.#fileHandle.getFile();
+		const res = await file.text();
+		return res.split("\r\n");
 	}
 
-	processing() {
-		const keyArr = Object.keys(this.#list[0]);
-		if (!keyArr.includes("nashipping_name")) {
-			const list = this.#list.map((v) => ({
-				order_sn: v.order_sn,
-				nashipping_name: v.shipping_sn.includes("YT") ? "圆通快递" : "中通快递",
-				shipping_sn: v.shipping_sn,
-			}));
-			this.#list = list;
+	// 分解转换成基本格式
+	/**
+	 * 生成基本表格顺序
+	 * 订单号
+	 * 商品
+	 * 姓名
+	 * 电话
+	 * 地址
+	 */
+	decompose(arr: string[]) {
+		const twoDimensionArr = [];
+		const perimeter = Object.keys(config.分解txt表格字段).length;
+		for (let i = 0; i < arr.length; i += perimeter) {
+			twoDimensionArr.push(arr.slice(i, i + perimeter));
 		}
-		return this.#list;
+		return twoDimensionArr.map((v) => {
+			const obj: any = {};
+			for (const i in v) {
+				switch (i) {
+					case "0":
+						obj[config.分解txt表格字段.订单号] = v[i];
+						break;
+					case "1":
+						obj[config.分解txt表格字段.商品] = v[i];
+						break;
+					case "2":
+						obj[config.分解txt表格字段.姓名] = v[i];
+						break;
+					case "3":
+						obj[config.分解txt表格字段.电话] = v[i];
+						break;
+					case "4":
+						obj[config.分解txt表格字段.地址] = v[i];
+						break;
+				}
+			}
+			return obj;
+		});
+	}
+
+	// 组装成仓库需要格式
+	assemble(arr: string[]) {
+		const ver1Cover: any = [];
+		const ver1Suit: any = [];
+		const ver2Cover: any = [];
+		const ver2Suit: any = [];
+		arr.forEach((v: any) => {
+			const version = !v.商品.includes("升级款") ? config.组装excel表格版本[1] : config.组装excel表格版本[2];
+			const sku = v.商品.includes("+软皮活页夹") ? config.组装excel表格款式.全套 : config.组装excel表格款式.书皮;
+			const color = v.商品.includes("绿")
+				? config.组装excel表格颜色.绿
+				: v.商品.includes("粉")
+				? config.组装excel表格颜色.粉
+				: v.商品.includes("蓝")
+				? config.组装excel表格颜色.蓝
+				: "异常";
+			const num = v.商品.includes("!") ? v.商品.split("!")[1] * 1 : 1;
+			const price = sku === config.组装excel表格款式.全套 ? 48 : 15;
+			const obj = {
+				物流单号: "",
+				[config.分解txt表格字段.姓名]: v.姓名,
+				[config.分解txt表格字段.电话]: v.电话,
+				[config.分解txt表格字段.地址]: v.地址,
+				[config.组装excel表格字段.版本]: version,
+				[config.组装excel表格字段.款式]: sku,
+				[config.组装excel表格字段.颜色]: color,
+				[config.组装excel表格字段.数量]: num,
+				[config.组装excel表格字段.价格]: price,
+				[config.分解txt表格字段.订单号]: v.订单号,
+			};
+			if (version === config.组装excel表格版本[1]) {
+				if (sku === config.组装excel表格款式.全套) {
+					ver1Suit.push(obj);
+				} else {
+					ver1Cover.push(obj);
+				}
+			} else {
+				if (sku === config.组装excel表格款式.全套) {
+					ver2Suit.push(obj);
+				} else {
+					ver2Cover.push(obj);
+				}
+			}
+		});
+		return [...ver1Cover, ...ver1Suit, ...ver2Cover, ...ver2Suit];
 	}
 }

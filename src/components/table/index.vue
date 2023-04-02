@@ -1,31 +1,46 @@
-<script setup lang="ts" name="table">
-import { IImportTableItem } from "@type/index";
+<script setup lang="ts" name="tables">
+import { computed } from "vue";
+import config from "@/config";
 
 type Props = {
-	data?: IImportTableItem[];
-	label?: string;
+	data: any[];
+	label: string;
+	total?: number;
+	borderColor?: string;
 };
-
 const props = withDefaults(defineProps<Props>(), {
-	data: () => [],
+	total: 0,
+	borderColor: "blue",
+});
+
+const label = computed(() => {
+	return props.total ? `${props.label}  总价:${props.total}` : props.label;
 });
 </script>
 
 <template>
-	<el-table class="mt10" v-if="props.data.length !== 0" :data="props.data" border stripe>
-		<template v-if="props.label">
-			<el-table-column align="center" :label="props.label">
-				<el-table-column prop="order_sn" label="order" width="180" />
-				<el-table-column prop="nashipping_name" label="nashipping" width="180" />
-				<el-table-column prop="shipping_sn" label="shipping" />
+	<div v-if="props.data.length !== 0" class="box mt10" :class="props.borderColor">
+		<el-table :data="props.data" border stripe>
+			<el-table-column align="center" :label="label">
+				<el-table-column v-for="(o, i) in Object.keys(props.data[0])" :prop="o" :label="o" />
 			</el-table-column>
-		</template>
-		<template v-else>
-			<el-table-column prop="order_sn" label="order" width="180" />
-			<el-table-column prop="nashipping_name" label="nashipping" width="180" />
-			<el-table-column prop="shipping_sn" label="shipping" />
-		</template>
-	</el-table>
+		</el-table>
+	</div>
 </template>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.box {
+	border-width: 1px;
+	border-style: solid;
+	border-radius: @radius;
+	&.blue {
+		border-color: @col-blue;
+	}
+	&.green {
+		border-color: @col-green;
+	}
+	&.yellow {
+		border-color: @col-yellow;
+	}
+}
+</style>
