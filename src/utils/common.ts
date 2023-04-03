@@ -1,4 +1,5 @@
 import config from "@/config";
+import { ElMessage } from "element-plus";
 
 export class FormatDate {
 	value: Date;
@@ -58,7 +59,38 @@ export class ParseDocument {
 		[this.#fileHandle] = await window.showOpenFilePicker();
 		const file = await this.#fileHandle.getFile();
 		const res = await file.text();
-		return res.split("\r\n").filter((v: string) => v);
+		const untreatedArr = res.split("\r\n").filter((v: string) => v);
+		let spaceMarkArr: number[] = [];
+		untreatedArr.forEach((v: string, i: number) => {
+			if (v === "=") spaceMarkArr.push(i);
+		});
+		if (this.validate(spaceMarkArr, untreatedArr, Object.keys(config.分解txt表格字段).length)) {
+			ElMessage.error(
+				`${config.errMsg.上传txt} ${this.validate(
+					spaceMarkArr,
+					untreatedArr,
+					Object.keys(config.分解txt表格字段).length
+				)}`
+			);
+			return;
+		}
+		return untreatedArr;
+	}
+
+	validate(markArr: number[], baseArr: any, cycleLen: number) {
+		for (let i = 0; i <= markArr.length; i++) {
+			switch (i) {
+				case 0:
+					if (markArr[i] % cycleLen !== 0) return "第1组数据异常";
+					break;
+				case markArr.length:
+					if ((baseArr.length - markArr[i - 1] - 1) % cycleLen !== 0) return "最后一组数据异常";
+					break;
+				default:
+					if ((markArr[i] - markArr[i - 1] - 1) % cycleLen !== 0) return `第${i + 1}组数据异常`;
+					break;
+			}
+		}
 	}
 
 	// 分解转换成基本格式
@@ -75,6 +107,7 @@ export class ParseDocument {
 		for (const i of arr) {
 			console.log();
 		}
+		console.log(arr);
 
 		return;
 		const twoDimensionArr = [];
