@@ -19,7 +19,7 @@ const handleClick = (type: number) => {
 	judgeLoading(type);
 	data.import()
 		.then((res) => {
-			list.value = data.assemble(data.decompose(res));
+			list.value = data.generate(res);
 			totalPrice.value = total.calc(list.value);
 			emit("transitionList", list.value, totalPrice.value, type);
 			if (type) excel.export(list.value, config.生成原始excel文件名);

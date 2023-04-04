@@ -93,60 +93,59 @@ export class ParseDocument {
 		}
 	}
 
-	// 分解转换成基本格式
-	/**
-	 * 生成基本表格顺序
-	 * 订单号
-	 * 商品
-	 * 姓名
-	 * 电话
-	 * 地址
-	 */
-	decompose(arr: string[]) {
-		const y = arr.find((v) => v === "=");
-		for (const i of arr) {
-			console.log();
-		}
-		console.log(arr);
-
-		return;
-		const twoDimensionArr = [];
-		const perimeter = Object.keys(config.分解txt表格字段).length;
-		for (let i = 0; i < arr.length; i += perimeter) {
-			twoDimensionArr.push(arr.slice(i, i + perimeter));
-		}
-		return twoDimensionArr.map((v) => {
+	// 处理数据
+	generate(arr: string[]) {
+		// 1 分解转换成基本格式
+		/**
+		 * 生成基本表格顺序
+		 * 订单号
+		 * 商品
+		 * 姓名
+		 * 电话
+		 * 地址
+		 */
+		const cleanArr = arr.filter((v) => v !== "=");
+		const binaryArr = [];
+		const cycleLen = Object.keys(config.分解txt表格字段).length;
+		for (let i = 0; i < cleanArr.length; i += cycleLen) {
 			const obj: any = {};
-			for (const i in v) {
-				switch (i) {
-					case "0":
-						obj[config.分解txt表格字段.订单号] = v[i];
+			cleanArr.slice(i, i + cycleLen).forEach((v, j) => {
+				switch (j) {
+					case 0:
+						obj[config.分解txt表格字段.订单号] = v;
 						break;
-					case "1":
-						obj[config.分解txt表格字段.商品] = v[i];
+					case 1:
+						obj[config.分解txt表格字段.商品] = v;
 						break;
-					case "2":
-						obj[config.分解txt表格字段.姓名] = v[i];
+					case 2:
+						obj[config.分解txt表格字段.姓名] = v;
 						break;
-					case "3":
-						obj[config.分解txt表格字段.电话] = v[i];
+					case 3:
+						obj[config.分解txt表格字段.电话] = v;
 						break;
-					case "4":
-						obj[config.分解txt表格字段.地址] = v[i];
+					case 4:
+						obj[config.分解txt表格字段.地址] = v;
+						const pos = arr.findIndex((w) => w === v);
+						const prepArr = arr.slice(0, pos);
+						let idx = prepArr.indexOf("=");
+						let count = 1;
+						while (idx !== -1) {
+							count++;
+							idx = prepArr.indexOf("=", idx + 1);
+						}
+						obj.shop = count;
 						break;
 				}
-			}
-			return obj;
-		});
-	}
+			});
+			binaryArr.push(obj);
+		}
 
-	// 组装成仓库需要格式
-	assemble(arr: string[]) {
+		// 2 组装成仓库需要格式
 		const ver1Cover: any = [];
 		const ver1Suit: any = [];
 		const ver2Cover: any = [];
 		const ver2Suit: any = [];
-		arr.forEach((v: any) => {
+		binaryArr.forEach((v: any) => {
 			const version = !v.商品.includes("升级款") ? config.组装excel表格版本[1] : config.组装excel表格版本[2];
 			const sku = v.商品.includes("+软皮活页夹") ? config.组装excel表格款式.全套 : config.组装excel表格款式.书皮;
 			const color = v.商品.includes("绿")
@@ -169,6 +168,7 @@ export class ParseDocument {
 				[config.组装excel表格字段.数量]: num,
 				[config.组装excel表格字段.价格]: price,
 				[config.分解txt表格字段.订单号]: v.订单号,
+				[config.组装excel表格字段.店铺]: v.shop,
 			};
 			if (version === config.组装excel表格版本[1]) {
 				if (sku === config.组装excel表格款式.全套) {
