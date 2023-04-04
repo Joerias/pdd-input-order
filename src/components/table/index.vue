@@ -22,6 +22,7 @@ const label = computed(() => {
 	<div v-if="props.data.length !== 0" class="box mt10" :class="props.borderColor">
 		<el-table :data="props.data" border stripe>
 			<el-table-column align="center" :label="label">
+				<el-table-column v-if="props.data.length > 3" type="index" width="40" align="center" />
 				<el-table-column v-for="(o, i) in Object.keys(props.data[0])" :prop="o" :label="o" />
 			</el-table-column>
 		</el-table>

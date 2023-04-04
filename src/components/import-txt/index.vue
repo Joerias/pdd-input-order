@@ -15,19 +15,14 @@ const list = ref<any>([]);
 const totalPrice = ref<number>(0);
 const loading1 = ref<boolean>(false);
 const loading2 = ref<boolean>(false);
-const handleClick = (type: number) => {
+const handleClick = async (type: number) => {
 	judgeLoading(type);
-	data.import()
-		.then((res) => {
-			list.value = data.generate(res);
-			totalPrice.value = total.calc(list.value);
-			emit("transitionList", list.value, totalPrice.value, type);
-			if (type) excel.export(list.value, config.生成原始excel文件名);
-			judgeLoading(type);
-		})
-		.catch(() => {
-			judgeLoading(type);
-		});
+	const impData = await data.import();
+	list.value = data.generate(impData);
+	totalPrice.value = total.calc(list.value);
+	emit("transitionList", list.value, totalPrice.value, type);
+	if (type) excel.export(list.value, config.生成原始excel文件名);
+	judgeLoading(type);
 };
 
 const judgeLoading = (type: number) => {
