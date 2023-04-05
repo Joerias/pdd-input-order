@@ -5,8 +5,6 @@ import { FormatDate } from "@/utils/common";
 const today = new FormatDate(new Date());
 
 export default class Excel {
-	constructor() {}
-
 	import(excelRcFileBuffer: ArrayBuffer) {
 		// 读取表格对象
 		const workbook = xlsx.read(excelRcFileBuffer, { type: "buffer" });

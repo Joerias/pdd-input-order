@@ -59,7 +59,10 @@ export class ParseDocument {
 		[this.#fileHandle] = await window.showOpenFilePicker();
 		const file = await this.#fileHandle.getFile();
 		const res = await file.text();
-		const untreatedArr = res.split("\r\n").filter((v: string) => v);
+		const untreatedArr = res
+			.split("\r\n")
+			.filter((v: string) => v)
+			.map((v: string) => v.replace(/^\s+|\s+$/g, ""));
 		let spaceMarkArr: number[] = [];
 		untreatedArr.forEach((v: string, i: number) => {
 			if (v === "=") spaceMarkArr.push(i);
