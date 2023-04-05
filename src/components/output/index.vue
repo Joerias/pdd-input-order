@@ -26,7 +26,7 @@ const handleClick = () => {
 </script>
 
 <template>
-	<el-button type="primary" size="large" plain @click="handleClick"> {{ config.导出发单 }} </el-button>
+	<!-- <el-button type="primary" size="large" plain @click="handleClick"> {{ config.导出发单 }} </el-button> -->
 </template>
 
 <style lang="less" scoped></style>

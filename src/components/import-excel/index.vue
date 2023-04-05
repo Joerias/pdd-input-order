@@ -37,31 +37,31 @@ const uploadHttpRequest = (e: any) => {
 	fileReader.readAsBinaryString(e.file);
 };
 
-const dealExcel = (ws) => {
-	let keymap = {
-		// 转换的开头
-		姓名: "name",
-		工资月份: "month",
-		工资总金额: "money",
-		部门: "section",
-		职位: "job",
-	};
-	ws.forEach((sourceObj) => {
-		Object.keys(sourceObj).map((keys) => {
-			let newKey = keymap[keys];
-			if (newKey) {
-				sourceObj[newKey] = sourceObj[keys];
-				delete sourceObj[keys];
-			}
-		});
-	});
-	tableData.value = ws;
-};
+// const dealExcel = (ws: any) => {
+// 	let keymap = {
+// 		// 转换的开头
+// 		姓名: "name",
+// 		工资月份: "month",
+// 		工资总金额: "money",
+// 		部门: "section",
+// 		职位: "job",
+// 	};
+// 	ws.forEach((sourceObj) => {
+// 		Object.keys(sourceObj).map((keys) => {
+// 			let newKey = keymap[keys];
+// 			if (newKey) {
+// 				sourceObj[newKey] = sourceObj[keys];
+// 				delete sourceObj[keys];
+// 			}
+// 		});
+// 	});
+// 	tableData.value = ws;
+// };
 </script>
 
 <template>
 	<el-upload class="upload ml20" :before-upload="beforeUpload" :http-request="uploadHttpRequest">
-		<el-button type="primary" plain size="large"> {{ config.导入excel按钮描述 }} </el-button>
+		<el-button type``="primary" plain size="large"> {{ config.导入excel按钮描述 }} </el-button>
 	</el-upload>
 </template>
 
