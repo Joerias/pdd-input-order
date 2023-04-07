@@ -56,28 +56,30 @@ export class ParseDocument {
 	 * 买家地址
 	 */
 	async import() {
-		[this.#fileHandle] = await window.showOpenFilePicker();
-		const file = await this.#fileHandle.getFile();
-		const res = await file.text();
-		const untreatedArr = res
-			.split("\r\n")
-			.filter((v: string) => v)
-			.map((v: string) => v.replace(/^\s+|\s+$/g, ""));
-		let spaceMarkArr: number[] = [];
-		untreatedArr.forEach((v: string, i: number) => {
-			if (v === "=") spaceMarkArr.push(i);
-		});
-		if (this.validate(spaceMarkArr, untreatedArr, Object.keys(config.分解txt表格字段).length)) {
-			ElMessage.error(
-				`${config.errMsg.上传txt} ${this.validate(
-					spaceMarkArr,
-					untreatedArr,
-					Object.keys(config.分解txt表格字段).length
-				)}`
-			);
-			return;
-		}
-		return untreatedArr;
+		try {
+			[this.#fileHandle] = await window.showOpenFilePicker();
+			const file = await this.#fileHandle.getFile();
+			const res = await file.text();
+			const untreatedArr = res
+				.split("\r\n")
+				.filter((v: string) => v)
+				.map((v: string) => v.replace(/^\s+|\s+$/g, ""));
+			let spaceMarkArr: number[] = [];
+			untreatedArr.forEach((v: string, i: number) => {
+				if (v === "=") spaceMarkArr.push(i);
+			});
+			if (this.validate(spaceMarkArr, untreatedArr, Object.keys(config.分解txt表格字段).length)) {
+				ElMessage.error(
+					`${config.errMsg.上传txt} ${this.validate(
+						spaceMarkArr,
+						untreatedArr,
+						Object.keys(config.分解txt表格字段).length
+					)}`
+				);
+				return;
+			}
+			return untreatedArr;
+		} catch (e) {}
 	}
 
 	validate(markArr: number[], baseArr: any, cycleLen: number) {

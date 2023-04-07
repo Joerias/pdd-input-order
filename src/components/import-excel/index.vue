@@ -61,7 +61,7 @@ const uploadHttpRequest = (e: any) => {
 
 <template>
 	<el-upload class="upload ml20" :before-upload="beforeUpload" :http-request="uploadHttpRequest">
-		<el-button type``="primary" plain size="large"> {{ config.导入excel按钮描述 }} </el-button>
+		<el-button type="primary" plain size="large"> {{ config.导入excel按钮描述 }} </el-button>
 	</el-upload>
 </template>
 
