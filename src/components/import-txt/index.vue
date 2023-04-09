@@ -1,7 +1,7 @@
 <script setup lang="ts" name="import-txt">
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import { ParseDocument, Total } from "@util/common";
-import Excel from "@util/xlsx";
+import { Excel, type mergeListType } from "@/utils/excel";
 import config from "@/config";
 
 // type Props = {};
@@ -10,6 +10,10 @@ const emit = defineEmits(["transitionList"]);
 const data = new ParseDocument();
 const total = new Total();
 const excel = new Excel();
+const mergeList: mergeListType[] = reactive([
+	// { startRow: 1, endRow: 2, startColumn: 3, endColumn: 3 },
+	// { startRow: 3, endRow: 5, startColumn: 3, endColumn: 3 },
+]);
 
 const list = ref<any>([]);
 const totalPrice = ref<number>(0);
@@ -18,11 +22,19 @@ const loading2 = ref<boolean>(false);
 const handleClick = async (type: number) => {
 	judgeLoading(type);
 	try {
-		const impData = await data.import();
+		const impData = await data.documentImport();
 		list.value = data.generate(impData);
 		totalPrice.value = total.calc(list.value);
 		emit("transitionList", list.value, totalPrice.value, type);
-		if (type) excel.export(list.value, config.生成原始excel文件名);
+		if (type)
+			excel.exportExcel({
+				name: config.生成原始excel文件名,
+				data: list.value,
+				cellStyle: {
+					singleWidth: [20, 15, 15, 40, 8, 20, 5, 5, 5, 30, 10],
+				},
+				mergeList,
+			});
 	} catch (e) {
 	} finally {
 		judgeLoading(type);
@@ -36,47 +48,6 @@ const judgeLoading = (type: number) => {
 		loading2.value = false;
 	}
 };
-
-const test = () => {
-	const arr = [
-		{
-			date: "2016-05-03",
-			name: "Tom",
-			address: "123",
-		},
-		{
-			date: "2016-05-02",
-			name: "Tom",
-			address: "456",
-		},
-		{
-			date: "2016-05-04",
-			name: "Tom",
-			address: "789",
-		},
-		{
-			date: "2016-05-01",
-			name: "Tom",
-			address: "147",
-		},
-		{
-			date: "2016-05-08",
-			name: "Tom",
-			address: "258",
-		},
-		{
-			date: "2016-05-06",
-			name: "Tom",
-			address: "369",
-		},
-		{
-			date: "2016-05-07",
-			name: "Tom",
-			address: "No. 189, Grove St, Los Angeles",
-		},
-	];
-	excel.export(arr, "ss");
-};
 </script>
 
 <template>
@@ -86,7 +57,6 @@ const test = () => {
 	<el-button size="large" type="warning" plain :loading="loading2" @click="handleClick(1)">
 		{{ config.导入txt按钮描述 }}
 	</el-button>
-	<el-button size="large" type="warning" plain @click="test"> export </el-button>
 </template>
 
 <style lang="less" scoped></style>

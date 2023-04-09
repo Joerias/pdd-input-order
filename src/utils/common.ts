@@ -10,7 +10,7 @@ export class FormatDate {
 		const year = this.value.getFullYear();
 		const month = this.value.getMonth() + 1;
 		const day = this.value.getDate();
-		const rst = type === "/" ? `${year}/${month}/${day}` : `${year}年${month}月${day}日`;
+		const rst = type ? `${year}${type}${month}${type}${day}` : `${year}年${month}月${day}日`;
 		return rst;
 	}
 }
@@ -23,27 +23,6 @@ export class Total {
 	}
 }
 
-// export class OutputStandard {
-// 	#list: IImportTableItem[];
-
-// 	constructor(list: IImportTableItem[]) {
-// 		this.#list = list;
-// 	}
-
-// 	processing() {
-// 		const keyArr = Object.keys(this.#list[0]);
-// 		if (!keyArr.includes("nashipping_name")) {
-// 			const list = this.#list.map((v) => ({
-// 				order_sn: v.order_sn,
-// 				nashipping_name: v.shipping_sn.includes("YT") ? "圆通快递" : "中通快递",
-// 				shipping_sn: v.shipping_sn,
-// 			}));
-// 			this.#list = list;
-// 		}
-// 		return this.#list;
-// 	}
-// }
-
 export class ParseDocument {
 	#fileHandle: any;
 
@@ -55,7 +34,7 @@ export class ParseDocument {
 	 * 买家电话
 	 * 买家地址
 	 */
-	async import() {
+	async documentImport() {
 		try {
 			[this.#fileHandle] = await window.showOpenFilePicker();
 			const file = await this.#fileHandle.getFile();
@@ -82,6 +61,7 @@ export class ParseDocument {
 		} catch (e) {}
 	}
 
+	// 导入验证
 	validate(markArr: number[], baseArr: any, cycleLen: number) {
 		for (let i = 0; i <= markArr.length; i++) {
 			switch (i) {
@@ -148,8 +128,14 @@ export class ParseDocument {
 		// 2 组装成仓库需要格式
 		const ver1Cover: any = [];
 		const ver1Suit: any = [];
+		const ver1SuitGreen: any = [];
+		const ver1SuitPink: any = [];
+		const ver1SuitBlue: any = [];
 		const ver2Cover: any = [];
 		const ver2Suit: any = [];
+		const ver2SuitGreen: any = [];
+		const ver2SuitPink: any = [];
+		const ver2SuitBlue: any = [];
 		binaryArr.forEach((v: any) => {
 			const version = !v.商品.includes("升级款") ? config.组装excel表格版本[1] : config.组装excel表格版本[2];
 			const sku = v.商品.includes("+软皮活页夹") ? config.组装excel表格款式.全套 : config.组装excel表格款式.书皮;
@@ -162,6 +148,7 @@ export class ParseDocument {
 				: "异常";
 			const num = v.商品.includes("!") ? v.商品.split("!")[1] * 1 : 1;
 			const price = sku === config.组装excel表格款式.全套 ? 48 : 15;
+			const shop = config.组装excel表格店铺[v.shop];
 			const obj = {
 				物流单号: "",
 				[config.分解txt表格字段.姓名]: v.姓名,
@@ -173,22 +160,61 @@ export class ParseDocument {
 				[config.组装excel表格字段.数量]: num,
 				[config.组装excel表格字段.价格]: price,
 				[config.分解txt表格字段.订单号]: v.订单号,
-				[config.组装excel表格字段.店铺]: v.shop,
+				[config.组装excel表格字段.店铺]: shop,
 			};
 			if (version === config.组装excel表格版本[1]) {
 				if (sku === config.组装excel表格款式.全套) {
-					ver1Suit.push(obj);
+					switch (color) {
+						case config.组装excel表格颜色.绿:
+							ver1SuitGreen.push(obj);
+							break;
+						case config.组装excel表格颜色.粉:
+							ver1SuitPink.push(obj);
+							break;
+						case config.组装excel表格颜色.蓝:
+							ver1SuitBlue.push(obj);
+							break;
+					}
 				} else {
 					ver1Cover.push(obj);
 				}
 			} else {
 				if (sku === config.组装excel表格款式.全套) {
-					ver2Suit.push(obj);
+					switch (color) {
+						case config.组装excel表格颜色.绿:
+							ver2SuitGreen.push(obj);
+							break;
+						case config.组装excel表格颜色.粉:
+							ver2SuitPink.push(obj);
+							break;
+						case config.组装excel表格颜色.蓝:
+							ver2SuitBlue.push(obj);
+							break;
+					}
 				} else {
 					ver2Cover.push(obj);
 				}
 			}
 		});
-		return [...ver1Cover, ...ver1Suit, ...ver2Cover, ...ver2Suit];
+		console.log(
+			ver1Cover,
+			ver1SuitGreen,
+			ver1SuitPink,
+			ver1SuitBlue,
+			ver2Cover,
+			ver2SuitGreen,
+			ver2SuitPink,
+			ver2SuitBlue
+		);
+		return [
+			...ver1Cover,
+			...ver1SuitGreen,
+			...ver1SuitPink,
+			...ver1SuitBlue,
+			...ver2Cover,
+			...ver2SuitGreen,
+			...ver2SuitPink,
+			...ver2SuitBlue,
+		];
 	}
 }
