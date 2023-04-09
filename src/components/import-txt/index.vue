@@ -31,7 +31,7 @@ const handleClick = async (type: number) => {
 				name: config.生成原始excel文件名,
 				data: list.value,
 				cellStyle: {
-					singleWidth: [20, 15, 15, 40, 8, 20, 5, 5, 5, 30, 10],
+					singleWidth: [20, 15, 15, 50, 40, 5, 5, 30, 10],
 				},
 				mergeList,
 			});
