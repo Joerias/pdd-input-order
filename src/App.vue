@@ -1,7 +1,6 @@
 <script setup lang="ts" name="app">
 import { ref } from "vue";
 import ImportTxt from "@comp/import-txt/index.vue";
-// import ImportExcel from "@comp/import-excel/index.vue";
 import Tables from "@comp/table/index.vue";
 import config from "@/config";
 
@@ -24,7 +23,6 @@ const handleReturnOrderList = (val: any) => {
 	<div class="container">
 		<div class="df">
 			<ImportTxt @transitionList="(arr:any, total:number, type:number) => handleImport(arr, total, type)" />
-			<!-- <ImportExcel @transitionList="handleReturnOrderList" /> -->
 		</div>
 		<div class="w96per mauto">
 			<Tables

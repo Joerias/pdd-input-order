@@ -26,11 +26,11 @@ export interface exportExcelType {
 	/**
 	 * 表头字段
 	 */
-	header: string[];
+	header?: string[];
 	/**
 	 * 表头字段对应中文
 	 */
-	customHeader: string[];
+	customHeader?: string[];
 	/**
 	 * 工作表名
 	 */

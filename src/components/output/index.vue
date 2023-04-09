@@ -1,14 +1,11 @@
 <script setup lang="ts" name="output">
 import { ref, watch } from "vue";
-import Excel from "@util/xlsx";
 // import { OutputStandard } from "@util/common";
 import config from "@/config";
 
 // type Props = {};
 // const props = withDefaults(defineProps<Props>(), {});
 const emit = defineEmits(["showOutputData"]);
-
-const excel = new Excel();
 
 // watch(
 // 	props.data,
