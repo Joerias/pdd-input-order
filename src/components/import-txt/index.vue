@@ -21,7 +21,6 @@ const totalPrice = ref<number>(0);
 const loading1 = ref<boolean>(false);
 const loading2 = ref<boolean>(false);
 const handleClick = async (type: number) => {
-	console.log(type);
 	judgeLoading(type, true);
 	try {
 		const impData = await data.documentImport();
@@ -29,7 +28,7 @@ const handleClick = async (type: number) => {
 		downloadList.value = data.generate(impData, 2);
 		totalPrice.value = total.calc(list.value);
 		emit("transitionList", list.value, totalPrice.value, type);
-		if (type)
+		if (type === 2)
 			for (const i in downloadList.value) {
 				if (downloadList.value[i].length > 0) {
 					excel.exportExcel({
@@ -43,6 +42,7 @@ const handleClick = async (type: number) => {
 				}
 			}
 	} catch (e) {
+		console.log(e);
 	} finally {
 		judgeLoading(type, false);
 	}
