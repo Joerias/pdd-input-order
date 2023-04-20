@@ -20,8 +20,8 @@ const handleReturnOrderList = (val: any) => {
 </script>
 
 <template>
-	<div class="container">
-		<div class="df">
+	<div class="container" :class="{ data: importBaseData.length > 0 }">
+		<div class="btns">
 			<ImportTxt @transitionList="(arr:any, total:number, type:number) => handleImport(arr, total, type)" />
 		</div>
 		<div class="w96per mauto">
@@ -36,4 +36,8 @@ const handleReturnOrderList = (val: any) => {
 	</div>
 </template>
 
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.data {
+	justify-content: flex-start;
+}
+</style>

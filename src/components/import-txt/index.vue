@@ -16,6 +16,7 @@ const mergeList: mergeListType[] = reactive([
 ]);
 
 const list = ref<any>([]);
+const downloadList = ref<any>({});
 const totalPrice = ref<number>(0);
 const loading1 = ref<boolean>(false);
 const loading2 = ref<boolean>(false);
@@ -23,18 +24,23 @@ const handleClick = async (type: number) => {
 	judgeLoading(type);
 	try {
 		const impData = await data.documentImport();
-		list.value = data.generate(impData);
+		list.value = data.generate(impData, 1);
+		downloadList.value = data.generate(impData, 2);
 		totalPrice.value = total.calc(list.value);
 		emit("transitionList", list.value, totalPrice.value, type);
 		if (type)
-			excel.exportExcel({
-				name: config.生成原始excel文件名,
-				data: list.value,
-				cellStyle: {
-					singleWidth: [20, 15, 15, 50, 40, 5, 5, 30, 10],
-				},
-				mergeList,
-			});
+			for (const i in downloadList.value) {
+				if (downloadList.value[i].length > 0) {
+					excel.exportExcel({
+						name: config.生成原始excel文件名[i],
+						data: downloadList.value[i],
+						cellStyle: {
+							singleWidth: [20, 15, 15, 70, 40, 5, 5, 30, 10],
+						},
+						mergeList,
+					});
+				}
+			}
 	} catch (e) {
 	} finally {
 		judgeLoading(type);

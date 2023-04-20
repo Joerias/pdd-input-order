@@ -47,39 +47,53 @@ export class ParseDocument {
 			untreatedArr.forEach((v: string, i: number) => {
 				if (v === "=") spaceMarkArr.push(i);
 			});
-			if (this.validate(spaceMarkArr, untreatedArr, Object.keys(config.分解txt表格字段).length)) {
-				ElMessage.error(
-					`${config.errMsg.上传txt} ${this.validate(
-						spaceMarkArr,
-						untreatedArr,
-						Object.keys(config.分解txt表格字段).length
-					)}`
-				);
+			const validateMsg = this.#validate(spaceMarkArr, untreatedArr, Object.keys(config.分解txt表格字段).length);
+			if (validateMsg) {
+				ElMessage.error(`${config.errMsg.上传txt} ${validateMsg}`);
 				return;
 			}
 			return untreatedArr;
 		} catch (e) {}
 	}
 
-	// 导入验证
-	validate(markArr: number[], baseArr: any, cycleLen: number) {
-		for (let i = 0; i <= markArr.length; i++) {
-			switch (i) {
-				case 0:
-					if (markArr[i] % cycleLen !== 0) return "第1组数据异常";
-					break;
-				case markArr.length:
-					if ((baseArr.length - markArr[i - 1] - 1) % cycleLen !== 0) return "最后一组数据异常";
-					break;
-				default:
-					if ((markArr[i] - markArr[i - 1] - 1) % cycleLen !== 0) return `第${i + 1}组数据异常`;
-					break;
+	/**
+	 * @description 导入验证
+	 * @param markArr 含分割标签的位置序列数组
+	 * @param baseArr 原始数据数组
+	 * @param cycleLen 一条完整信息的行长度
+	 * @return string
+	 */
+	#validate(markArr: number[], baseArr: any, cycleLen: number) {
+		if (markArr.length === 0) {
+			// 仅有一个店铺的情况
+			if (baseArr.length % cycleLen !== 0) return "当前数据仅为默认店铺，且录入数据条目不成对";
+		} else {
+			// 不止一个店铺的情况
+			for (let i = 0; i <= markArr.length; i++) {
+				switch (i) {
+					case 0:
+						if (markArr[i] % cycleLen !== 0) return "当前数据为多组店铺，其中第1组数据条目不成对";
+						break;
+					case markArr.length:
+						if ((baseArr.length - markArr[i - 1] - 1) % cycleLen !== 0)
+							return "当前数据为多组店铺，其中最后一组数据条目不成对";
+						break;
+					default:
+						if ((markArr[i] - markArr[i - 1] - 1) % cycleLen !== 0)
+							return `当前数据为多组店铺，其中第${i + 1}组数据条目不成对`;
+						break;
+				}
 			}
 		}
 	}
 
-	// 处理数据
-	generate(arr: string[]) {
+	/**
+	 * @description 处理数据生成结果
+	 * @param arr 导入后生成的符合规格的数组
+	 * @param type 生成类型：1 table展示用的，一个完整的数组；2 导出excel用的，拆分成两个的数组
+	 * @return []|{}
+	 */
+	generate(arr: string[], type: number) {
 		// 1 分解转换成基本格式
 		/**
 		 * 生成基本表格顺序
@@ -194,25 +208,30 @@ export class ParseDocument {
 				}
 			}
 		});
-		console.log(
-			ver1Cover,
-			ver1SuitGreen,
-			ver1SuitPink,
-			ver1SuitBlue,
-			ver2Cover,
-			ver2SuitGreen,
-			ver2SuitPink,
-			ver2SuitBlue
-		);
-		return [
-			...ver1Cover,
-			...ver1SuitGreen,
-			...ver1SuitPink,
-			...ver1SuitBlue,
-			...ver2Cover,
-			...ver2SuitGreen,
-			...ver2SuitPink,
-			...ver2SuitBlue,
-		];
+		// console.log(
+		// 	ver1Cover,
+		// 	ver1SuitGreen,
+		// 	ver1SuitPink,
+		// 	ver1SuitBlue,
+		// 	ver2Cover,
+		// 	ver2SuitGreen,
+		// 	ver2SuitPink,
+		// 	ver2SuitBlue
+		// );
+		return type === 1
+			? [
+					...ver1Cover,
+					...ver1SuitGreen,
+					...ver1SuitPink,
+					...ver1SuitBlue,
+					...ver2Cover,
+					...ver2SuitGreen,
+					...ver2SuitPink,
+					...ver2SuitBlue,
+			  ]
+			: {
+					1: [...ver1Cover, ...ver1SuitGreen, ...ver1SuitPink, ...ver1SuitBlue],
+					2: [...ver2Cover, ...ver2SuitGreen, ...ver2SuitPink, ...ver2SuitBlue],
+			  };
 	}
 }
