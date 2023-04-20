@@ -21,6 +21,7 @@ const totalPrice = ref<number>(0);
 const loading1 = ref<boolean>(false);
 const loading2 = ref<boolean>(false);
 const handleClick = async (type: number) => {
+	console.log(type);
 	judgeLoading(type, true);
 	try {
 		const impData = await data.documentImport();
