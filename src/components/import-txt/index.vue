@@ -21,7 +21,7 @@ const totalPrice = ref<number>(0);
 const loading1 = ref<boolean>(false);
 const loading2 = ref<boolean>(false);
 const handleClick = async (type: number) => {
-	judgeLoading(type);
+	judgeLoading(type, true);
 	try {
 		const impData = await data.documentImport();
 		list.value = data.generate(impData, 1);
@@ -43,24 +43,24 @@ const handleClick = async (type: number) => {
 			}
 	} catch (e) {
 	} finally {
-		judgeLoading(type);
+		judgeLoading(type, false);
 	}
 };
 
-const judgeLoading = (type: number) => {
-	if (!type) {
-		loading1.value = false;
+const judgeLoading = (type: number, state: boolean) => {
+	if (type === 1) {
+		loading1.value = state;
 	} else {
-		loading2.value = false;
+		loading2.value = state;
 	}
 };
 </script>
 
 <template>
-	<el-button size="large" type="success" plain :loading="loading1" @click="handleClick(0)">
+	<el-button size="large" type="success" plain :loading="loading1" @click="handleClick(1)">
 		{{ config.仅导入txt按钮描述 }}
 	</el-button>
-	<el-button size="large" type="warning" plain :loading="loading2" @click="handleClick(1)">
+	<el-button size="large" type="warning" plain :loading="loading2" @click="handleClick(2)">
 		{{ config.导入txt按钮描述 }}
 	</el-button>
 </template>

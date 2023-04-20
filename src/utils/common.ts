@@ -37,6 +37,7 @@ export class ParseDocument {
 	async documentImport() {
 		try {
 			[this.#fileHandle] = await window.showOpenFilePicker();
+			console.log(this.#fileHandle);
 			const file = await this.#fileHandle.getFile();
 			const res = await file.text();
 			const untreatedArr = res
