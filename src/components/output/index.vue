@@ -1,6 +1,6 @@
 <script setup lang="ts" name="output">
 import { ref, watch } from "vue";
-// import { OutputStandard } from "@util/common";
+// import { OutputStandard } from "@/utils/common";
 import config from "@/config";
 
 // type Props = {};

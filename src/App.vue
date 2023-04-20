@@ -1,7 +1,7 @@
 <script setup lang="ts" name="app">
 import { ref } from "vue";
-import ImportTxt from "@comp/import-txt/index.vue";
-import Tables from "@comp/table/index.vue";
+import ImportTxt from "@/components/import-txt/index.vue";
+import Tables from "@/components/table/index.vue";
 import config from "@/config";
 
 const importBaseData = ref<any>([]);

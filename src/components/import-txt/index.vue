@@ -1,6 +1,6 @@
 <script setup lang="ts" name="import-txt">
 import { ref, reactive } from "vue";
-import { ParseDocument, Total } from "@util/common";
+import { ParseDocument, Total } from "@/utils/common";
 import { Excel, type mergeListType } from "@/utils/excel";
 import config from "@/config";
 
