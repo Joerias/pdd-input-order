@@ -25,6 +25,7 @@ export class Total {
 
 export class ParseDocument {
 	#fileHandle: any;
+	#generateData: any;
 
 	// 导入.txt
 	/**
@@ -90,10 +91,9 @@ export class ParseDocument {
 	/**
 	 * @description 处理数据生成结果
 	 * @param arr 导入后生成的符合规格的数组
-	 * @param type 生成类型：1 table展示用的，一个完整的数组；2 导出excel用的，拆分成两个的数组
-	 * @return []|{}
+	 * @return void
 	 */
-	generate(arr: string[], type: number) {
+	async generate(arr: string[]) {
 		// 1 分解转换成基本格式
 		/**
 		 * 生成基本表格顺序
@@ -141,12 +141,10 @@ export class ParseDocument {
 
 		// 2 组装成仓库需要格式
 		const ver1Cover: any = [];
-		const ver1Suit: any = [];
 		const ver1SuitGreen: any = [];
 		const ver1SuitPink: any = [];
 		const ver1SuitBlue: any = [];
 		const ver2Cover: any = [];
-		const ver2Suit: any = [];
 		const ver2SuitGreen: any = [];
 		const ver2SuitPink: any = [];
 		const ver2SuitBlue: any = [];
@@ -161,7 +159,14 @@ export class ParseDocument {
 				? config.组装excel表格颜色.蓝
 				: "异常";
 			const num = v.商品.includes("!") ? v.商品.split("!")[1] * 1 : 1;
-			const price = sku === config.组装excel表格款式.全套 ? 48 : 15;
+			let premium = false;
+			config.补价地区.find((v2) => {
+				if (v.地址.includes(v2)) premium = true;
+			});
+			const price =
+				(sku === config.组装excel表格款式.全套
+					? config.组装excel表格价格.全套
+					: config.组装excel表格价格.书皮) + (premium ? config.补价 : 0);
 			const shop = config.组装excel表格店铺[v.shop];
 			const obj = {
 				物流单号: "",
@@ -208,30 +213,55 @@ export class ParseDocument {
 				}
 			}
 		});
-		// console.log(
-		// 	ver1Cover,
-		// 	ver1SuitGreen,
-		// 	ver1SuitPink,
-		// 	ver1SuitBlue,
-		// 	ver2Cover,
-		// 	ver2SuitGreen,
-		// 	ver2SuitPink,
-		// 	ver2SuitBlue
-		// );
-		return type === 1
-			? [
-					...ver1Cover,
-					...ver1SuitGreen,
-					...ver1SuitPink,
-					...ver1SuitBlue,
-					...ver2Cover,
-					...ver2SuitGreen,
-					...ver2SuitPink,
-					...ver2SuitBlue,
-			  ]
-			: {
-					1: [...ver1Cover, ...ver1SuitGreen, ...ver1SuitPink, ...ver1SuitBlue],
-					2: [...ver2Cover, ...ver2SuitGreen, ...ver2SuitPink, ...ver2SuitBlue],
-			  };
+		this.#generateData = {
+			ver1Cover,
+			ver1SuitGreen,
+			ver1SuitPink,
+			ver1SuitBlue,
+			ver2Cover,
+			ver2SuitGreen,
+			ver2SuitPink,
+			ver2SuitBlue,
+		};
+	}
+
+	getCollectData() {
+		const {
+			ver1Cover,
+			ver1SuitGreen,
+			ver1SuitPink,
+			ver1SuitBlue,
+			ver2Cover,
+			ver2SuitGreen,
+			ver2SuitPink,
+			ver2SuitBlue,
+		} = this.#generateData;
+		return [
+			...ver1Cover,
+			...ver1SuitGreen,
+			...ver1SuitPink,
+			...ver1SuitBlue,
+			...ver2Cover,
+			...ver2SuitGreen,
+			...ver2SuitPink,
+			...ver2SuitBlue,
+		];
+	}
+
+	getShopsData() {
+		const {
+			ver1Cover,
+			ver1SuitGreen,
+			ver1SuitPink,
+			ver1SuitBlue,
+			ver2Cover,
+			ver2SuitGreen,
+			ver2SuitPink,
+			ver2SuitBlue,
+		} = this.#generateData;
+		return {
+			1: [...ver1Cover, ...ver1SuitGreen, ...ver1SuitPink, ...ver1SuitBlue],
+			2: [...ver2Cover, ...ver2SuitGreen, ...ver2SuitPink, ...ver2SuitBlue],
+		};
 	}
 }

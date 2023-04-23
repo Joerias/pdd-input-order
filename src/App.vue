@@ -10,7 +10,7 @@ const importTxtType = ref<string>("");
 const handleImport = (arr: any, total: number, type: number) => {
 	importBaseData.value = arr;
 	importTotalPrice.value = total;
-	importTxtType.value = type ? "yellow" : "green";
+	importTxtType.value = type === 1 ? "green" : "yellow";
 };
 
 const importOrderNoData = ref<any>([]);
