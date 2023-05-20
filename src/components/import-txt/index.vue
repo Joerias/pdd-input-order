@@ -24,26 +24,25 @@ const handleClick = async (type: number) => {
 	judgeLoading(type, true);
 	try {
 		const impData = await data.documentImport();
-		data.generate(impData).then(() => {
-			list.value = data.getCollectData();
-			totalPrice.value = total.calc(list.value);
-			emit("transitionList", list.value, totalPrice.value, type);
-			if (type === 2) {
-				downloadList.value = data.getShopsData();
-				for (const i in downloadList.value) {
-					if (downloadList.value[i].length > 0) {
-						excel.exportExcel({
-							name: config.生成原始excel文件名[i],
-							data: downloadList.value[i],
-							cellStyle: {
-								singleWidth: [20, 15, 15, 70, 40, 5, 5, 30, 10],
-							},
-							mergeList,
-						});
-					}
+		await data.generate(impData);
+		list.value = data.getCollectData();
+		totalPrice.value = total.calc(list.value);
+		emit("transitionList", list.value, totalPrice.value, type);
+		if (type === 2) {
+			downloadList.value = data.getShopsData();
+			for (const i in downloadList.value) {
+				if (downloadList.value[i].length > 0) {
+					excel.exportExcel({
+						name: config.生成原始excel文件名[i],
+						data: downloadList.value[i],
+						cellStyle: {
+							singleWidth: [20, 15, 15, 70, 40, 5, 5, 30, 10],
+						},
+						mergeList,
+					});
 				}
 			}
-		});
+		}
 	} catch (e) {
 		console.log(e);
 	} finally {
