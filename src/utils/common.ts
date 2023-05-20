@@ -149,7 +149,9 @@ export class ParseDocument {
 		const ver2SuitPink: any = [];
 		const ver2SuitBlue: any = [];
 		binaryArr.forEach((v: any) => {
-			const version = !v.商品.includes("升级款") ? config.组装excel表格版本[1] : config.组装excel表格版本[2];
+			const version = !["升级款", "高级版"].some((u) => v.商品.includes(u))
+				? config.组装excel表格版本[1]
+				: config.组装excel表格版本[2];
 			const sku = v.商品.includes("+软皮活页夹") ? config.组装excel表格款式.全套 : config.组装excel表格款式.书皮;
 			const color = v.商品.includes("绿")
 				? config.组装excel表格颜色.绿
