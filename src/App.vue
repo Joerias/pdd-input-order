@@ -2,6 +2,7 @@
 import { ref } from "vue";
 import ImportTxt from "@/components/import-txt/index.vue";
 import Tables from "@/components/table/index.vue";
+import TxtDemo from "@/components/txt-demo/index.vue";
 import config from "@/config";
 
 const importBaseData = ref<any>([]);
@@ -33,6 +34,7 @@ const handleReturnOrderList = (val: any) => {
 			/>
 			<Tables :data="importOrderNoData" :label="config.导入excel按钮描述" />
 		</div>
+		<TxtDemo />
 	</div>
 </template>
 

@@ -140,130 +140,206 @@ export class ParseDocument {
 		}
 
 		// 2 组装成仓库需要格式
-		const ver1Cover: any = [];
-		const ver1SuitGreen: any = [];
-		const ver1SuitPink: any = [];
-		const ver1SuitBlue: any = [];
-		const ver2Cover: any = [];
-		const ver2SuitGreen: any = [];
-		const ver2SuitPink: any = [];
-		const ver2SuitBlue: any = [];
+		const pd1Cover: any = [];
+		const pd1SuitGreen: any = [];
+		const pd1SuitPink: any = [];
+		const pd1SuitBlue: any = [];
+		const pd2Cover: any = [];
+		const pd2SuitGreen: any = [];
+		const pd2SuitPink: any = [];
+		const pd2SuitBlue: any = [];
+		const pd3: any = [];
 		binaryArr.forEach((v: any) => {
-			const version = !["升级款", "高级版"].some((u) => v.商品.includes(u))
-				? config.组装excel表格版本[1]
-				: config.组装excel表格版本[2];
-			const sku = v.商品.includes("+软皮活页夹") ? config.组装excel表格款式.全套 : config.组装excel表格款式.书皮;
-			const color = v.商品.includes("绿")
-				? config.组装excel表格颜色.绿
-				: v.商品.includes("粉")
-				? config.组装excel表格颜色.粉
-				: v.商品.includes("蓝")
-				? config.组装excel表格颜色.蓝
-				: "异常";
-			const num = v.商品.includes("!") ? v.商品.split("!")[1] * 1 : 1;
+			// 标记产品序列
+			const productType =
+				v.商品.indexOf("#") !== -1
+					? v.商品.substring(v.商品.indexOf("#") + 1, v.商品.indexOf("#") + 2) * 1
+					: ["升级款", "高级版"].some((u) => v.商品.includes(u))
+					? 2
+					: 1;
+
+			const num =
+				v.商品.indexOf("!") !== -1 ? v.商品.substring(v.商品.indexOf("!") + 1, v.商品.indexOf("!") + 2) * 1 : 1;
 			let premium = false;
-			config.补价地区.find((v2) => {
-				if (v.地址.includes(v2)) premium = true;
+			config.补价地区.find((u) => {
+				if (v.地址.includes(u)) premium = true;
 			});
-			const price =
-				(sku === config.组装excel表格款式.全套
-					? config.组装excel表格价格.全套
-					: config.组装excel表格价格.书皮) + (premium ? config.补价 : 0);
 			const shop = config.组装excel表格店铺[v.shop];
+
+			let version: string, cover: string, sku: string, color: string, price: number;
+
+			switch (productType) {
+				case 1:
+					version = config.组装excel表格版本.产品12[1];
+					cover = config.组装excel表格封皮.产品12;
+					sku = v.商品.includes("+软皮活页夹")
+						? config.组装excel表格款式.产品12.全套
+						: config.组装excel表格款式.产品12.书皮;
+					color = v.商品.includes("绿")
+						? config.组装excel表格颜色.产品12.绿
+						: v.商品.includes("粉")
+						? config.组装excel表格颜色.产品12.粉
+						: v.商品.includes("蓝")
+						? config.组装excel表格颜色.产品12.蓝
+						: "异常";
+					price =
+						(sku === config.组装excel表格款式.产品12.全套
+							? config.组装excel表格价格.产品12.全套
+							: config.组装excel表格价格.产品12.书皮) +
+						(premium ? config.组装excel表格价格.产品12.邮费补价 : 0);
+					break;
+				case 2:
+					version = config.组装excel表格版本.产品12[2];
+					cover = config.组装excel表格封皮.产品12;
+					sku = v.商品.includes("+软皮活页夹")
+						? config.组装excel表格款式.产品12.全套
+						: config.组装excel表格款式.产品12.书皮;
+					color = v.商品.includes("绿")
+						? config.组装excel表格颜色.产品12.绿
+						: v.商品.includes("粉")
+						? config.组装excel表格颜色.产品12.粉
+						: v.商品.includes("蓝")
+						? config.组装excel表格颜色.产品12.蓝
+						: "异常";
+					price =
+						(sku === config.组装excel表格款式.产品12.全套
+							? config.组装excel表格价格.产品12.全套
+							: config.组装excel表格价格.产品12.书皮) +
+						(premium ? config.组装excel表格价格.产品12.邮费补价 : 0);
+					break;
+				case 3:
+					version = config.组装excel表格版本.产品3;
+					cover = v.商品.includes("凹印")
+						? config.组装excel表格封皮.产品3.烫印
+						: v.商品.includes("uv印")
+						? config.组装excel表格封皮.产品3.白
+						: v.商品.includes("无印")
+						? config.组装excel表格封皮.产品3.无
+						: "";
+					sku = v.商品.includes("+彩页内页")
+						? config.组装excel表格款式.产品3.全套
+						: v.商品.includes("无内页")
+						? config.组装excel表格款式.产品3.书皮
+						: config.组装excel表格款式.产品3.内页;
+					color = config.组装excel表格颜色.产品3;
+					price =
+						(sku === config.组装excel表格款式.产品3.全套
+							? config.组装excel表格价格.产品3.全套
+							: sku === config.组装excel表格款式.产品3.书皮
+							? config.组装excel表格价格.产品3.书皮
+							: config.组装excel表格价格.产品3.内页) +
+						config.组装excel表格价格.产品3.邮费 +
+						(premium ? config.组装excel表格价格.产品3.邮费补价 : 0);
+					break;
+			}
+
+			// 组装输出单项obj
 			const obj = {
 				物流单号: "",
 				[config.分解txt表格字段.姓名]: v.姓名,
 				[config.分解txt表格字段.电话]: v.电话,
 				[config.分解txt表格字段.地址]: v.地址,
-				[config.组装excel表格字段.商品]: `${version} ${sku} ${color}`,
+				[config.组装excel表格字段.商品]: `${version} ${cover} ${sku} ${color}`,
 				[config.组装excel表格字段.数量]: num,
 				[config.组装excel表格字段.价格]: price,
 				[config.分解txt表格字段.订单号]: v.订单号,
 				[config.组装excel表格字段.店铺]: shop,
 			};
-			if (version === config.组装excel表格版本[1]) {
-				if (sku === config.组装excel表格款式.全套) {
-					switch (color) {
-						case config.组装excel表格颜色.绿:
-							ver1SuitGreen.push(obj);
-							break;
-						case config.组装excel表格颜色.粉:
-							ver1SuitPink.push(obj);
-							break;
-						case config.组装excel表格颜色.蓝:
-							ver1SuitBlue.push(obj);
-							break;
+
+			switch (productType) {
+				case 1:
+					if (sku === config.组装excel表格款式.产品12.全套) {
+						switch (color) {
+							case config.组装excel表格颜色.产品12.绿:
+								pd1SuitGreen.push(obj);
+								break;
+							case config.组装excel表格颜色.产品12.粉:
+								pd1SuitPink.push(obj);
+								break;
+							case config.组装excel表格颜色.产品12.蓝:
+								pd1SuitBlue.push(obj);
+								break;
+						}
+					} else {
+						pd1Cover.push(obj);
 					}
-				} else {
-					ver1Cover.push(obj);
-				}
-			} else {
-				if (sku === config.组装excel表格款式.全套) {
-					switch (color) {
-						case config.组装excel表格颜色.绿:
-							ver2SuitGreen.push(obj);
-							break;
-						case config.组装excel表格颜色.粉:
-							ver2SuitPink.push(obj);
-							break;
-						case config.组装excel表格颜色.蓝:
-							ver2SuitBlue.push(obj);
-							break;
+					break;
+				case 2:
+					if (sku === config.组装excel表格款式.产品12.全套) {
+						switch (color) {
+							case config.组装excel表格颜色.产品12.绿:
+								pd2SuitGreen.push(obj);
+								break;
+							case config.组装excel表格颜色.产品12.粉:
+								pd2SuitPink.push(obj);
+								break;
+							case config.组装excel表格颜色.产品12.蓝:
+								pd2SuitBlue.push(obj);
+								break;
+						}
+					} else {
+						pd2Cover.push(obj);
 					}
-				} else {
-					ver2Cover.push(obj);
-				}
+					break;
+				case 3:
+					pd3.push(obj);
+					break;
 			}
 		});
 		this.#generateData = {
-			ver1Cover,
-			ver1SuitGreen,
-			ver1SuitPink,
-			ver1SuitBlue,
-			ver2Cover,
-			ver2SuitGreen,
-			ver2SuitPink,
-			ver2SuitBlue,
+			pd1Cover,
+			pd1SuitGreen,
+			pd1SuitPink,
+			pd1SuitBlue,
+			pd2Cover,
+			pd2SuitGreen,
+			pd2SuitPink,
+			pd2SuitBlue,
+			pd3,
 		};
 	}
 
 	getCollectData() {
 		const {
-			ver1Cover,
-			ver1SuitGreen,
-			ver1SuitPink,
-			ver1SuitBlue,
-			ver2Cover,
-			ver2SuitGreen,
-			ver2SuitPink,
-			ver2SuitBlue,
+			pd1Cover,
+			pd1SuitGreen,
+			pd1SuitPink,
+			pd1SuitBlue,
+			pd2Cover,
+			pd2SuitGreen,
+			pd2SuitPink,
+			pd2SuitBlue,
+			pd3,
 		} = this.#generateData;
 		return [
-			...ver1Cover,
-			...ver1SuitGreen,
-			...ver1SuitPink,
-			...ver1SuitBlue,
-			...ver2Cover,
-			...ver2SuitGreen,
-			...ver2SuitPink,
-			...ver2SuitBlue,
+			...pd1Cover,
+			...pd1SuitGreen,
+			...pd1SuitPink,
+			...pd1SuitBlue,
+			...pd2Cover,
+			...pd2SuitGreen,
+			...pd2SuitPink,
+			...pd2SuitBlue,
+			...pd3,
 		];
 	}
 
 	getShopsData() {
 		const {
-			ver1Cover,
-			ver1SuitGreen,
-			ver1SuitPink,
-			ver1SuitBlue,
-			ver2Cover,
-			ver2SuitGreen,
-			ver2SuitPink,
-			ver2SuitBlue,
+			pd1Cover,
+			pd1SuitGreen,
+			pd1SuitPink,
+			pd1SuitBlue,
+			pd2Cover,
+			pd2SuitGreen,
+			pd2SuitPink,
+			pd2SuitBlue,
+			pd3,
 		} = this.#generateData;
 		return {
-			1: [...ver1Cover, ...ver1SuitGreen, ...ver1SuitPink, ...ver1SuitBlue],
-			2: [...ver2Cover, ...ver2SuitGreen, ...ver2SuitPink, ...ver2SuitBlue],
+			1: [...pd1Cover, ...pd1SuitGreen, ...pd1SuitPink, ...pd1SuitBlue],
+			2: [...pd2Cover, ...pd2SuitGreen, ...pd2SuitPink, ...pd2SuitBlue],
+			3: [...pd3],
 		};
 	}
 }
