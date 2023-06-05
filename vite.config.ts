@@ -24,6 +24,7 @@ export default defineConfig({
 	},
 	base: "./",
 	build: {
+		outDir: "docs",
 		rollupOptions: {
 			output: {
 				// 最小化拆分包
